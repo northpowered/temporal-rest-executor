@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "temporal-rest-executor"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "temporal_rest_executor"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.95.0"
+uvicorn = "^0.21.1"
+temporalio = "^1.1.0"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.2.2"
+pytest-asyncio = "^0.21.0"
+httpx = "^0.23.3"
+
+
+[tool.poetry.group.lint.dependencies]
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+flake8 = "^6.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
