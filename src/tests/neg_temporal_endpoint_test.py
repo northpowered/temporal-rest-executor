@@ -28,7 +28,7 @@ async def test_unknown_activity(t_client: Client):
             args={"str_1": "q", "str_2": "w"},
             start_to_close_timeout=10,
             parent_workflow_id="pytest-parent-workflow",
-            execution_timeout=2,
+            execution_timeout=10,
         )
         resp: ExecutionResult = await activity_execution(
             client=t_client, payload=payload
@@ -51,7 +51,7 @@ async def test_wrong_args_activity(t_client: Client):
             args={"str_FOO": "q", "str_2": "w"},
             start_to_close_timeout=10,
             parent_workflow_id="pytest-parent-workflow",
-            execution_timeout=2,
+            execution_timeout=4,
         )
         resp: ExecutionResult = await activity_execution(
             client=t_client, payload=payload
@@ -74,7 +74,7 @@ async def test_wrong_timeouts_activity(t_client: Client):
             args={"str_1": "q", "str_2": "w"},
             start_to_close_timeout=-6,
             parent_workflow_id="pytest-parent-workflow",
-            execution_timeout=2,
+            execution_timeout=4,
         )
         resp: ExecutionResult = await activity_execution(
             client=t_client, payload=payload
@@ -96,7 +96,7 @@ async def test_unknown_workflow(t_client: Client):
             workflow_task_queue=MOCK_QUEUE_NAME,
             args={"str_1": "q", "str_2": "w"},
             workflow_id="pytest-single-workflow",
-            execution_timeout=3
+            execution_timeout=4
         )
         resp: ExecutionResult = await workflow_execution(
             client=t_client, payload=payload

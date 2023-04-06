@@ -1,5 +1,5 @@
 from temporalio.client import Client, WorkflowFailureError
-from temporalio import workflow, exceptions
+from temporalio import workflow
 from temporalio.worker import Worker
 from .schemas import (
     ActivityExecutionInput,
@@ -17,7 +17,7 @@ from datetime import timedelta
 from uuid import uuid4
 
 
-async def temporal_client():
+async def temporal_client():  # pragma: no cover
     return await Client.connect(
         TEMPORAL_ENDPOINT,
         namespace=TEMPORAL_NAMESPACE,

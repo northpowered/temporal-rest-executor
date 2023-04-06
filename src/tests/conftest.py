@@ -2,7 +2,6 @@ import asyncio
 import multiprocessing
 import sys
 from typing import AsyncGenerator
-from executor.temporal import temporal_client
 import pytest
 import pytest_asyncio
 from temporalio.client import Client
@@ -11,7 +10,7 @@ from temporalio.testing import WorkflowEnvironment
 # Due to https://github.com/python/cpython/issues/77906, multiprocessing on
 # macOS starting with Python 3.8 has changed from "fork" to "spawn". For
 # pre-3.8, we are changing it for them.
-if sys.version_info < (3, 8) and sys.platform.startswith("darwin"):  # pragma: no cover
+if sys.version_info < (3, 8) and sys.platform.startswith("darwin"):  # pragma: no cover # noqa: E501
     multiprocessing.set_start_method("spawn", True)
 
 
@@ -57,5 +56,5 @@ async def client(env: WorkflowEnvironment) -> Client:  # pragma: no cover
 
 
 @pytest_asyncio.fixture
-async def t_client() -> Client:  # pragma: no cover
-    return await temporal_client()
+async def t_client(env: WorkflowEnvironment) -> Client:  # pragma: no cover
+    return env.client
