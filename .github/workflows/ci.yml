@@ -24,7 +24,7 @@ jobs:
               run:  |
                 pip install poetry
                 poetry config virtualenvs.create false
-                poetry install --with dev
+                poetry install --with dev --no-root
             - name: Lint
               run: |
                 # stop the build if there are Python syntax errors or undefined names
@@ -48,8 +48,7 @@ jobs:
               run: |
                 pip install poetry
                 poetry config virtualenvs.create false
-                poetry install
-                poetry install --with test
+                poetry install --with test --no-root
             - name: Run integration tests
               run: poetry run pytest src --cov
             - name: Upload Codecov
