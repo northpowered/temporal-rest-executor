@@ -36,17 +36,17 @@ Args for endpoints:
 
 Simply run docker image
 ```bash
-docker run -p 8000:8000 IMAGE_NAME_HERE
+docker run -p 8000:8000 ghcr.io/northpowered/temporal-rest-executor:latest
 ```
 
 You can add Temporal endpoint as an env var
 ```bash
-docker run -e TEMPORAL_ENDPOINT=temporal:7233 -p 8000:8000 IMAGE_NAME_HERE
+docker run -e TEMPORAL_ENDPOINT=temporal:7233 -p 8000:8000 ghcr.io/northpowered/temporal-rest-executor:latest
 ```
 
 And specify docker network (this is the example for default Temporal compose manifest)
 ```bash
-docker run -e TEMPORAL_ENDPOINT=temporal:7233 -p 8000:8000 --network temporal-network IMAGE_NAME_HERE
+docker run -e TEMPORAL_ENDPOINT=temporal:7233 -p 8000:8000 --network temporal-network ghcr.io/northpowered/temporal-rest-executor:latest
 ```
 
 ## Config
