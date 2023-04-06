@@ -3,7 +3,7 @@
 [![codecov](https://codecov.io/github/northpowered/temporal-rest-executor/branch/main/graph/badge.svg?token=0Ei4nXXFfL)](https://codecov.io/github/northpowered/temporal-rest-executor)
 [![CI](https://github.com/northpowered/temporal-rest-executor/actions/workflows/ci.yml/badge.svg)](https://github.com/northpowered/temporal-rest-executor/actions/workflows/ci.yml)
 [![Docker Image CD](https://github.com/northpowered/temporal-rest-executor/actions/workflows/docker-image.yml/badge.svg)](https://github.com/northpowered/temporal-rest-executor/actions/workflows/docker-image.yml)
-
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=northpowered_temporal-rest-executor&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=northpowered_temporal-rest-executor)
 
 This is a simple tool to execute [Temporal](https://temporal.io/) workflows/activities through the REST endpoints
 
