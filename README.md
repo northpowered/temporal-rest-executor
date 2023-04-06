@@ -1,5 +1,10 @@
 # Temporal-REST-executor
 
+[![codecov](https://codecov.io/github/northpowered/temporal-rest-executor/branch/main/graph/badge.svg?token=0Ei4nXXFfL)](https://codecov.io/github/northpowered/temporal-rest-executor)
+[![CI](https://github.com/northpowered/temporal-rest-executor/actions/workflows/ci.yml/badge.svg)](https://github.com/northpowered/temporal-rest-executor/actions/workflows/ci.yml)
+[![Docker Image CD](https://github.com/northpowered/temporal-rest-executor/actions/workflows/docker-image.yml/badge.svg)](https://github.com/northpowered/temporal-rest-executor/actions/workflows/docker-image.yml)
+
+
 This is a simple tool to execute [Temporal](https://temporal.io/) workflows/activities through the REST endpoints
 
 Service provides some REST endpoints which can execute any workflow or activity, registered is the namespace (You can set it)
@@ -25,7 +30,7 @@ Args for endpoints:
 *workflow_task_queue* - [string] - REQUIRED
 *args* - [ANY] - may be null
 *execution_timeout* - [int] - Default is 10
-*workflow_id* - [string] - If null, UUID4 will be used
+*workfloCODECOV_TOKENw_id* - [string] - If null, UUID4 will be used
 ```
 ### Run
 
