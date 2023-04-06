@@ -2,7 +2,7 @@ import asyncio
 import multiprocessing
 import sys
 from typing import AsyncGenerator
-from src.temporal import temporal_client
+from executor.temporal import temporal_client
 import pytest
 import pytest_asyncio
 from temporalio.client import Client
@@ -11,20 +11,21 @@ from temporalio.testing import WorkflowEnvironment
 # Due to https://github.com/python/cpython/issues/77906, multiprocessing on
 # macOS starting with Python 3.8 has changed from "fork" to "spawn". For
 # pre-3.8, we are changing it for them.
-if sys.version_info < (3, 8) and sys.platform.startswith("darwin"):
+if sys.version_info < (3, 8) and sys.platform.startswith("darwin"):  # pragma: no cover
     multiprocessing.set_start_method("spawn", True)
 
 
-def pytest_addoption(parser):
+def pytest_addoption(parser):  # pragma: no cover
     parser.addoption(
         "--workflow-environment",
         default="local",
-        help="Which workflow environment to use ('local', 'time-skipping', or target to existing server)",
+        help="Which workflow environment to use \
+            ('local', 'time-skipping', or target to existing server)",
     )
 
 
 @pytest.fixture(scope="session")
-def event_loop():
+def event_loop():  # pragma: no cover
     # See https://github.com/pytest-dev/pytest-asyncio/issues/68
     # See https://github.com/pytest-dev/pytest-asyncio/issues/257
     # Also need ProactorEventLoop on older versions of Python with Windows so
@@ -38,7 +39,7 @@ def event_loop():
 
 
 @pytest_asyncio.fixture(scope="session")
-async def env(request) -> AsyncGenerator[WorkflowEnvironment, None]:
+async def env(request) -> AsyncGenerator[WorkflowEnvironment, None]:  # pragma: no cover # noqa: E501
     env_type = request.config.getoption("--workflow-environment")
     if env_type == "local":
         env = await WorkflowEnvironment.start_local()
@@ -51,9 +52,10 @@ async def env(request) -> AsyncGenerator[WorkflowEnvironment, None]:
 
 
 @pytest_asyncio.fixture
-async def client(env: WorkflowEnvironment) -> Client:
+async def client(env: WorkflowEnvironment) -> Client:  # pragma: no cover
     return env.client
 
+
 @pytest_asyncio.fixture
-async def client2() -> Client:
+async def t_client() -> Client:  # pragma: no cover
     return await temporal_client()

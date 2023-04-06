@@ -4,6 +4,11 @@ from temporalio.client import Client
 from temporalio.worker import Worker
 from dataclasses import dataclass
 from datetime import timedelta
+from typing import Sequence
+
+
+MOCK_QUEUE_NAME: str = "test-executor-mock"
+MOCK_TEMPORAL_ENDPOINT: str = "localhost:7233"
 
 
 @dataclass
@@ -67,13 +72,12 @@ class NoArgWorkflow:
 @workflow.defn(sandboxed=False)
 class SeqArgWorkflow:
     @workflow.run
-    async def run(self, str_1: str, str_2: str) -> dict:
+    async def run(self, args: Sequence) -> dict:
         return await workflow.execute_activity(
             seq_arg_activity,
-            args=[str_1, str_2],
+            args=args,
             start_to_close_timeout=timedelta(seconds=10),
         )
-
 
 
 test_workflows: list = [
@@ -90,24 +94,26 @@ test_activities: list = [
         ]
 
 
-async def create_worker() -> Worker:
+async def create_worker() -> Worker:  # pragma: no cover
     client = await Client.connect(
-        "localhost:7233",
+        MOCK_TEMPORAL_ENDPOINT,
     )
 
     worker = Worker(
         client,
-        task_queue="service-b-task-queue",
+        task_queue=MOCK_QUEUE_NAME,
         workflows=test_workflows,
         activities=test_activities,
     )
     return worker
 
 
-async def run_worker():
+async def run_worker():  # pragma: no cover
+    """Using for local development"""
     worker = await create_worker()
     await worker.run()
 
 
-def run_worker_sync():
+def run_worker_sync():  # pragma: no cover
+    """Using for local development"""
     asyncio.run(run_worker())

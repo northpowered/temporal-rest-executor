@@ -23,6 +23,7 @@ class WorkflowExecutionInput:
     workflow_task_queue: str
     args: Any | None = None
     workflow_id: str | None = None
+    execution_timeout: int = 10
 
 
 @dataclass

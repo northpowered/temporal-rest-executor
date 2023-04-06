@@ -1,5 +1,5 @@
 from temporalio.client import Client, WorkflowFailureError
-from temporalio import workflow
+from temporalio import workflow, exceptions
 from temporalio.worker import Worker
 from .schemas import (
     ActivityExecutionInput,
@@ -39,13 +39,18 @@ class InternalExecutionWorkflow:
                     ),
                 )
             else:
+                args = payload.args
+
+                if not isinstance(args, list):
+                    args = [args]
+
                 result = await workflow.execute_activity(
                     activity=payload.activity_name,
                     task_queue=payload.activity_task_queue,
                     start_to_close_timeout=timedelta(
                         seconds=payload.start_to_close_timeout
                     ),
-                    args=[payload.args],
+                    args=args,
                 )
         except Exception as ex:
             response.success = False
@@ -110,6 +115,7 @@ async def external_workflow_execution(
                 workflow=payload.workflow_name,
                 task_queue=payload.workflow_task_queue,
                 id=workflow_id,
+                execution_timeout=timedelta(seconds=payload.execution_timeout)
             )
         else:
             result = await client.execute_workflow(
@@ -117,10 +123,10 @@ async def external_workflow_execution(
                 payload.args,
                 task_queue=payload.workflow_task_queue,
                 id=workflow_id,
+                execution_timeout=timedelta(seconds=payload.execution_timeout)
             )
         response.data = result
     except WorkflowFailureError as ex:
         response.success = False
         response.error = str(ex.cause)
-
     return response

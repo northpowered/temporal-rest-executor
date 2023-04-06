@@ -1,9 +1,9 @@
 import uvicorn
-from .env import UVICORN_RELOAD, UVICORN_BIND_ADDR, UVICORN_BIND_PORT
+from executor.env import UVICORN_RELOAD, UVICORN_BIND_ADDR, UVICORN_BIND_PORT
 
 
 uvicorn.run(
-    "main:app",
+    "executor:app",
     reload=UVICORN_RELOAD,
     host=UVICORN_BIND_ADDR,
     port=UVICORN_BIND_PORT,
