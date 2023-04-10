@@ -65,6 +65,16 @@ Some env vars:
 
 **UVICORN_BIND_PORT = 8000**
 
+**TELEMETRY_ENABLED = True**
+
+**TELEMETRY_AGENT_HOST = localhost**
+
+**TELEMETRY_AGENT_PORT = 6831**
+
+**PROMETHEUS_ENDPOINT_ENABLED = True**
+
+**PROMETHEUS_ENDPOINT_PORT = 9000**
+
 ## Use
 
 Default FastAPI Swagger is available
