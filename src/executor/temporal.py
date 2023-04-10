@@ -15,12 +15,20 @@ from .env import (
 )
 from datetime import timedelta
 from uuid import uuid4
+import opentelemetry.context
+from temporalio.contrib.opentelemetry import TracingInterceptor
+from .telemetry import runtime
 
 
 async def temporal_client():  # pragma: no cover
+
+    opentelemetry.context.get_current()
+
     return await Client.connect(
         TEMPORAL_ENDPOINT,
         namespace=TEMPORAL_NAMESPACE,
+        interceptors=[TracingInterceptor()],
+        runtime=runtime,
     )
 
 
