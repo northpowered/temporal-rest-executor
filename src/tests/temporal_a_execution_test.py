@@ -11,6 +11,7 @@ from executor.temporal import (
     ActivityExecutionInput,
     ExecutionResult,
 )
+from executor.schemas import RetryPolicyInput
 
 
 @pytest.mark.asyncio
@@ -27,7 +28,7 @@ async def test_a_dataclass(t_client: Client):
             args={"str_1": "q", "str_2": "w"},
             start_to_close_timeout=10,
             parent_workflow_id="pytest-parent-workflow",
-            execution_timeout=4,
+            parent_workflow_execution_timeout=4,
         )
         resp: ExecutionResult = await internal_workflow_execution(
             client=t_client, payload=payload
@@ -50,7 +51,7 @@ async def test_a_single_arg(t_client: Client):
             args="spam",
             start_to_close_timeout=10,
             parent_workflow_id="pytest-parent-workflow",
-            execution_timeout=4,
+            parent_workflow_execution_timeout=4,
         )
         resp: ExecutionResult = await internal_workflow_execution(
             client=t_client, payload=payload
@@ -73,7 +74,7 @@ async def test_a_no_arg(t_client: Client):
             args=None,
             start_to_close_timeout=10,
             parent_workflow_id="pytest-parent-workflow",
-            execution_timeout=4,
+            parent_workflow_execution_timeout=4,
         )
         resp: ExecutionResult = await internal_workflow_execution(
             client=t_client, payload=payload
@@ -96,10 +97,38 @@ async def test_a_seq_arg(t_client: Client):
             args=["spam", "eggs"],
             start_to_close_timeout=10,
             parent_workflow_id="pytest-parent-workflow",
-            execution_timeout=4,
+            parent_workflow_execution_timeout=4,
         )
         resp: ExecutionResult = await internal_workflow_execution(
             client=t_client, payload=payload
         )
         assert resp.success, resp
         assert resp.data == "spameggs"
+
+
+@pytest.mark.asyncio
+async def test_a_retry_policy(t_client: Client):
+    async with Worker(
+        t_client,
+        task_queue=MOCK_QUEUE_NAME,
+        workflows=test_workflows,
+        activities=test_activities,
+    ):
+        payload: ActivityExecutionInput = ActivityExecutionInput(
+            activity_name="retry_activity",
+            activity_task_queue=MOCK_QUEUE_NAME,
+            args="spam",
+            start_to_close_timeout=10,
+            parent_workflow_id="pytest-parent-workflow",
+            parent_workflow_execution_timeout=60,
+            retry_policy=RetryPolicyInput(
+                initial_interval=2,
+                backoff_coefficient=7,
+                maximum_attempts=5
+            )
+        )
+        resp: ExecutionResult = await internal_workflow_execution(
+            client=t_client, payload=payload
+        )
+        assert resp.success, resp
+        assert resp.data == "spamspam"

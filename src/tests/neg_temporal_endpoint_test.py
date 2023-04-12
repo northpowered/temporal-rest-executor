@@ -28,7 +28,7 @@ async def test_unknown_activity(t_client: Client):
             args={"str_1": "q", "str_2": "w"},
             start_to_close_timeout=10,
             parent_workflow_id="pytest-parent-workflow",
-            execution_timeout=10,
+            parent_workflow_execution_timeout=10,
         )
         resp: ExecutionResult = await activity_execution(
             client=t_client, payload=payload
