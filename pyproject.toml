@@ -30,6 +30,11 @@ flake8 = "^6.0.0"
 temporalio = {version = "^1.1.0", extras = ["opentelementy"]}
 opentelemetry-exporter-jaeger-thrift = "^1.17.0"
 
+
+[tool.poetry.group.docs.dependencies]
+mkdocs-material = "^9.1.9"
+mkdocs-material-extensions = "^1.1.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

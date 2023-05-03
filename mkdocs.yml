@@ -1,0 +1,27 @@
+site_name: Temporal-REST-executor
+site_description: Small REST with Swagger UI server to work with Temporal objects 
+repo_url: https://github.com/northpowered/temporal-rest-executor
+repo_name: northpowered/temporal-rest-executor
+
+theme:
+  name: material
+  language: en
+  features:
+  - navigation.tracking
+  - content.code.copy
+
+plugins:
+  - tags
+
+markdown_extensions:
+  - tables
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
