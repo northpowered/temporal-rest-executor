@@ -20,7 +20,7 @@ from rich.console import Console
 
 
 __title__: str = SERVICE_NAME
-__version__: str = "0.2.0"
+__version__: str = "0.3.0"
 
 
 console = Console()

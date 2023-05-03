@@ -4,7 +4,7 @@ FROM python:3.10-slim
 
 LABEL org.opencontainers.image.source="https://github.com/northpowered/temporal-rest-executor"
 
-LABEL version="0.2.0"
+LABEL version="0.3.0"
 
 ENV POETRY_VIRTUALENVS_CREATE=false
 
