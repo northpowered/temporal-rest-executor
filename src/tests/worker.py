@@ -39,7 +39,7 @@ async def seq_arg_activity(str_1: str, str_2: str) -> str:
 
 @activity.defn()
 async def retry_activity(input: str) -> str:
-    #await asyncio.sleep(6)
+    # await asyncio.sleep(6)
     return input + input
 
 

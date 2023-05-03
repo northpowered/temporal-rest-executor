@@ -21,9 +21,9 @@ class APIRouter(_APIRouter):
             self.prefix = f"/v{version}{self.prefix}"
 
 
-execution_router = APIRouter(
-    prefix="/execution",
-    tags=["Temporal execution"],
+activity_router = APIRouter(
+    prefix="/activity",
+    tags=["Activities"],
     responses={
         404: {"description": "URL not found"},
         400: {"description": "Bad request"},
@@ -32,15 +32,27 @@ execution_router = APIRouter(
 )
 
 
-execution_router.add_api_route(
-    "/activity",
+workflow_router = APIRouter(
+    prefix="/workflow",
+    tags=["Workflows"],
+    responses={
+        404: {"description": "URL not found"},
+        400: {"description": "Bad request"},
+    },
+    version=APIVersion(1),
+)
+
+
+activity_router.add_api_route(
+    "/execute",
     activity_execution,
     summary="Execute any activity in the namespace",
     methods=["post"],
 )
 
-execution_router.add_api_route(
-    "/workflow",
+
+workflow_router.add_api_route(
+    "/execute",
     workflow_execution,
     summary="Execute any workflow in the namespace",
     methods=["post"],
