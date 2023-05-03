@@ -16,21 +16,35 @@ Args for endpoints:
 **Activity execution**
 
 ```
-*activity_name* - [string] - REQUIRED
-*activity_task_queue* - [string] - REQUIRED
-*args* - [ANY] - may be null
-*start_to_close_timeout* - [int] - Default is 10
-*execution_timeout* - [int] - Default is 10
-*parent_workflow_id* - [string] - If null, UUID4 will be used
+activity_name - [string] - REQUIRED
+activity_task_queue - [string] - REQUIRED
+args - [ANY] - may be null
+start_to_close_timeout - [int] - Default is 10
+schedule_to_start_timeout - [int] - may be null
+heartbeat_timeout - [int] - may be null
+schedule_to_close_timeout - [int] - may be null
+retry_policy - [Object] - may be null
+parent_workflow_id - [string] - If null, UUID4 will be used
+parent_workflow_execution_timeout - [int] - Default is 10
+parent_workflow_run_timeout - [int] - may be null
+parent_workflow_task_timeout - [int] - may be null
+
+# RetryPolicy object
+
+initial_interval - [int] - Default is 1
+backoff_coefficient - [float] - Default is 2
+maximum_interval - [int] - may be null
+maximum_attempts - [int] - Default is 0
 ```
+
 
 **Workflow execution**
 ```
-*workflow_name* - [string] - REQUIRED
-*workflow_task_queue* - [string] - REQUIRED
-*args* - [ANY] - may be null
-*execution_timeout* - [int] - Default is 10
-*workfloCODECOV_TOKENw_id* - [string] - If null, UUID4 will be used
+workflow_name - [string] - REQUIRED
+workflow_task_queue - [string] - REQUIRED
+args - [ANY] - may be null
+execution_timeout - [int] - Default is 10
+workflow_id- [string] - If null, UUID4 will be used
 ```
 ### Run
 

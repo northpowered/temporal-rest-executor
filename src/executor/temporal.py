@@ -18,6 +18,7 @@ from uuid import uuid4
 import opentelemetry.context
 from temporalio.contrib.opentelemetry import TracingInterceptor
 from .telemetry import runtime
+from .common import schedule_timeout_from_request
 
 
 async def temporal_client():  # pragma: no cover
@@ -42,9 +43,19 @@ class InternalExecutionWorkflow:
                 result = await workflow.execute_activity(
                     activity=payload.activity_name,
                     task_queue=payload.activity_task_queue,
-                    start_to_close_timeout=timedelta(
-                        seconds=payload.start_to_close_timeout
+                    start_to_close_timeout=schedule_timeout_from_request(
+                        payload.start_to_close_timeout
                     ),
+                    schedule_to_start_timeout=schedule_timeout_from_request(
+                        payload.schedule_to_start_timeout
+                    ),
+                    heartbeat_timeout=schedule_timeout_from_request(
+                        payload.heartbeat_timeout
+                    ),
+                    schedule_to_close_timeout=schedule_timeout_from_request(
+                        payload.schedule_to_close_timeout
+                    ),
+                    retry_policy=payload.get_policy(),
                 )
             else:
                 args = payload.args
@@ -55,9 +66,19 @@ class InternalExecutionWorkflow:
                 result = await workflow.execute_activity(
                     activity=payload.activity_name,
                     task_queue=payload.activity_task_queue,
-                    start_to_close_timeout=timedelta(
-                        seconds=payload.start_to_close_timeout
+                    start_to_close_timeout=schedule_timeout_from_request(
+                        payload.start_to_close_timeout
                     ),
+                    schedule_to_start_timeout=schedule_timeout_from_request(
+                        payload.schedule_to_start_timeout
+                    ),
+                    heartbeat_timeout=schedule_timeout_from_request(
+                        payload.heartbeat_timeout
+                    ),
+                    schedule_to_close_timeout=schedule_timeout_from_request(
+                        payload.schedule_to_close_timeout
+                    ),
+                    retry_policy=payload.get_policy(),
                     args=args,
                 )
         except Exception as ex:
@@ -91,7 +112,15 @@ async def internal_workflow_execution(
                 payload,
                 id=workflow_id,
                 task_queue=TEMPORAL_INTERNAL_TASK_QUEUE,
-                execution_timeout=timedelta(seconds=payload.execution_timeout),
+                execution_timeout=schedule_timeout_from_request(
+                    payload.parent_workflow_execution_timeout
+                ),
+                run_timeout=schedule_timeout_from_request(
+                    payload.parent_workflow_execution_timeout
+                ),
+                task_timeout=schedule_timeout_from_request(
+                    payload.parent_workflow_execution_timeout
+                ),
             )
             assert result.success, result.data
             response.data = result.data

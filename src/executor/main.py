@@ -12,7 +12,10 @@ from .env import (
     PROMETHEUS_ENDPOINT_PORT
 )
 from contextlib import asynccontextmanager
-from .router import execution_router
+from .router import (
+    workflow_router,
+    activity_router
+)
 from rich.console import Console
 
 
@@ -63,4 +66,5 @@ app = FastAPI(
 )
 
 
-app.include_router(execution_router)
+app.include_router(workflow_router)
+app.include_router(activity_router)

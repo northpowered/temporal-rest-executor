@@ -37,6 +37,12 @@ async def seq_arg_activity(str_1: str, str_2: str) -> str:
     return str_1 + str_2
 
 
+@activity.defn()
+async def retry_activity(input: str) -> str:
+    # await asyncio.sleep(6)
+    return input + input
+
+
 @workflow.defn(sandboxed=False)
 class DataclassArgWorkflow:
     @workflow.run
@@ -91,6 +97,7 @@ test_activities: list = [
             single_arg_activity,
             no_arg_activity,
             seq_arg_activity,
+            retry_activity
         ]
 
 
