@@ -7,11 +7,28 @@
 
 This is a simple tool to execute [Temporal](https://temporal.io/) workflows/activities through the REST endpoints
 
-Service provides some REST endpoints which can execute any workflow or activity, registered is the namespace (You can set it)
+All documentation are available [here](https://northpowered.github.io/temporal-rest-executor/)
 
 Based on [FastAPI](https://github.com/tiangolo/fastapi) and may be useful for development and QA
 
-Args for endpoints:
+## Quick start
+
+Just run docker image
+```bash
+docker run -p 8000:8000 ghcr.io/northpowered/temporal-rest-executor:latest
+```
+
+You can add Temporal endpoint as an env var
+```bash
+docker run -e TEMPORAL_ENDPOINT=temporal:7233 -p 8000:8000 ghcr.io/northpowered/temporal-rest-executor:latest
+```
+
+And specify docker network (this is the example for default Temporal compose manifest)
+```bash
+docker run -e TEMPORAL_ENDPOINT=temporal:7233 -p 8000:8000 --network temporal-network ghcr.io/northpowered/temporal-rest-executor:latest
+```
+
+### Args for endpoints:
 
 **Activity execution**
 
@@ -46,22 +63,6 @@ args - [ANY] - may be null
 execution_timeout - [int] - Default is 10
 workflow_id- [string] - If null, UUID4 will be used
 ```
-### Run
-
-Simply run docker image
-```bash
-docker run -p 8000:8000 ghcr.io/northpowered/temporal-rest-executor:latest
-```
-
-You can add Temporal endpoint as an env var
-```bash
-docker run -e TEMPORAL_ENDPOINT=temporal:7233 -p 8000:8000 ghcr.io/northpowered/temporal-rest-executor:latest
-```
-
-And specify docker network (this is the example for default Temporal compose manifest)
-```bash
-docker run -e TEMPORAL_ENDPOINT=temporal:7233 -p 8000:8000 --network temporal-network ghcr.io/northpowered/temporal-rest-executor:latest
-```
 
 ## Config
 
@@ -89,7 +90,7 @@ Some env vars:
 
 **PROMETHEUS_ENDPOINT_PORT = 9000**
 
-## Use
+## Usage
 
 Default FastAPI Swagger is available
 
@@ -98,31 +99,42 @@ or You can use curl:
 > Activity execution
 ```bash
 curl -X 'POST' \
-  'http://localhost:8000/v1/execution/activity' \
+  'http://localhost:8000/v1/activity/execute' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
-  "activity_name": "my_activity",
-  "activity_task_queue": "my_queue",
-  "args": ["ANY", "PARAMS"],
+  "activity_name": "your_remote_activity",
+  "activity_task_queue": "your_queue",
+  "args": "some args: string, object or null",
   "start_to_close_timeout": 10,
-  "execution_timeout": 10,
-  "parent_workflow_id": "MyQAWorkflow"
+  "parent_workflow_id": "MyId",
+  "schedule_to_start_timeout": 0,
+  "heartbeat_timeout": 0,
+  "schedule_to_close_timeout": 0,
+  "retry_policy": {
+    "initial_interval": 1,
+    "backoff_coefficient": 2,
+    "maximum_interval": 0,
+    "maximum_attempts": 0
+  },
+  "parent_workflow_execution_timeout": 10,
+  "parent_workflow_run_timeout": 0,
+  "parent_workflow_task_timeout": 0
 }'
 ```
 
 > Workflow execution
 ```bash
 curl -X 'POST' \
-  'http://localhost:8000/v1/execution/workflow' \
+  'http://localhost:8000/v1/workflow/execute' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
-  "workflow_name": "MyWorkflow",
-  "workflow_task_queue": "my_queue",
-  "args": "some args",
-  "workflow_id": "my_id",
-  "execution_timeout": 3
+  "workflow_name": "string",
+  "workflow_task_queue": "string",
+  "args": "string",
+  "workflow_id": "string",
+  "execution_timeout": 1
 }'
 ```
 
