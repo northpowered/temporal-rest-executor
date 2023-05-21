@@ -9,7 +9,8 @@ from .env import (
     TELEMETRY_AGENT_HOST,
     TELEMETRY_AGENT_PORT,
     PROMETHEUS_ENDPOINT_ENABLED,
-    PROMETHEUS_ENDPOINT_PORT
+    PROMETHEUS_ENDPOINT_PORT,
+    MANIFEST_FILENAME
 )
 from contextlib import asynccontextmanager
 from .router import (
@@ -17,7 +18,7 @@ from .router import (
     activity_router
 )
 from rich.console import Console
-
+from presets import manifest
 
 __title__: str = SERVICE_NAME
 __version__: str = "0.3.0"
@@ -53,6 +54,11 @@ async def lifespan(app: FastAPI):  # pragma: no cover
 
     Created with [red]:heart:[/ red] and by [blue bold]northpowered[/ blue bold]
     """)  # noqa: E501 W293
+    manifest.load(MANIFEST_FILENAME)
+    if manifest.Config.use_presets:
+        print(manifest.endpoints)
+    else:
+        print("no presets")
     yield
 
 
@@ -62,7 +68,8 @@ app = FastAPI(
     version=__version__,
     redoc_url=None,
     docs_url="/doc",
-    lifespan=lifespan
+    lifespan=lifespan,
+
 )
 
 
