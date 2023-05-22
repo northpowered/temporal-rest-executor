@@ -10,13 +10,10 @@ from .env import (
     TELEMETRY_AGENT_PORT,
     PROMETHEUS_ENDPOINT_ENABLED,
     PROMETHEUS_ENDPOINT_PORT,
-    MANIFEST_FILENAME
+    MANIFEST_FILENAME,
 )
 from contextlib import asynccontextmanager
-from .router import (
-    workflow_router,
-    activity_router
-)
+from .router import workflow_router, activity_router
 from rich.console import Console
 from presets import manifest
 
@@ -39,7 +36,8 @@ async def lifespan(app: FastAPI):  # pragma: no cover
     if PROMETHEUS_ENDPOINT_ENABLED:
         prometheus_str = f"[blue bold]enabled[/ blue bold] on [blue bold]127.0.0.1:{PROMETHEUS_ENDPOINT_PORT}[/ blue bold]"
 
-    console.print(f"""
+    console.print(
+        f"""
     {__title__}:{__version__} loaded for this Temporal instance:
     Temporal endpoint = [blue bold]{TEMPORAL_ENDPOINT}[/ blue bold]
     Temporal namespace = [blue bold]{TEMPORAL_NAMESPACE}[/ blue bold]
@@ -53,8 +51,9 @@ async def lifespan(app: FastAPI):  # pragma: no cover
     https://github.com/northpowered/temporal-rest-executor
 
     Created with [red]:heart:[/ red] and by [blue bold]northpowered[/ blue bold]
-    """)  # noqa: E501 W293
-    
+    """
+    )  # noqa: E501 W293
+
     yield
 
 
@@ -65,15 +64,13 @@ app = FastAPI(
     redoc_url=None,
     docs_url="/doc",
     lifespan=lifespan,
-
 )
 
 
 app.include_router(workflow_router)
 app.include_router(activity_router)
+
 manifest.load(MANIFEST_FILENAME)
-if manifest.Config.use_presets:
-    print(manifest.endpoints)
+
+if manifest.Config.use_presets and manifest.validate_presets():
     app.include_router(manifest.generate_router())
-else:
-    print("no presets")

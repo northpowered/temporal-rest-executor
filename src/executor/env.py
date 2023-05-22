@@ -40,5 +40,5 @@ PROMETHEUS_ENDPOINT_PORT: str = getenv(
     "PROMETHEUS_ENDPOINT_PORT", "9000"
 )
 MANIFEST_FILENAME: str = getenv(
-    "MANIFEST_FILENAME", "manifest.example.yaml"
+    "MANIFEST_FILENAME", "src/tests/manifests/manifest.urlduplication.yaml"
 )

@@ -6,8 +6,8 @@ endpoints:
       activity_name: single_arg_activity
       activity_task_queue: test-executor-mock
       args: foobar
-  - type: activity
-    url: /test2
+  - type: workflow
+    url: /single_arg_activity
     config:
-      activity_name: testact2
-      activity_task_queue: testactqueue2
+      workflow_name: workflow_name
+      workflow_task_queue: workflow_task_queue
