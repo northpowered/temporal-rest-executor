@@ -1,3 +1,12 @@
 endpoints:
   - type: activity
-    url: /test1
+    url: /single_arg_activity
+    config:
+      activity_name: single_arg_activity
+      activity_task_queue: test-executor-mock
+      args: foobar
+  - type: activity
+    url: /test2
+    config:
+      activity_name: testact2
+      activity_task_queue: testactqueue2

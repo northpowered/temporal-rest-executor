@@ -1,9 +1,18 @@
-from pydantic import BaseModel, validator, BaseSettings
+from misc.router import APIRouter, APIVersion
+from functools import partial
+from fastapi import Depends
+from executor.temporal import (
+    temporal_client,
+    Client,
+    internal_workflow_execution,
+    external_workflow_execution,
+)
+from pydantic import BaseModel, validator, BaseSettings, parse_obj_as
 from executor.schemas import WorkflowExecutionInput, ActivityExecutionInput
 import yaml
 import os
 from loguru import logger
-from typing import List
+from typing import List, Coroutine, Any
 
 class PreDefinedEndpoint(BaseModel):
     type: str | None = None
@@ -12,6 +21,7 @@ class PreDefinedEndpoint(BaseModel):
 
     class Config:
         allow_population_by_field_name = True
+        smart_union = True
 
 
     @validator('type')
@@ -35,24 +45,8 @@ class PresetManifest(BaseSettings):
         allow_population_by_field_name = True
 
     def read_from_dict(self, raw_data: dict):
-        print(raw_data)
-        print(self.__fields__)
-        for section_name in self.__fields__:
-            print(section_name)
-            section_data: dict = raw_data.get(section_name, dict())
-            print(section_data)
-            section: BaseModel = self.__getattribute__(section_name)
-            loaded_section: BaseModel = section.parse_obj(
-                section_data,
-                section_name
-            )
-            print(loaded_section)
-            if not loaded_section:
-                os._exit(1)
-            self.__setattr__(
-                section_name,
-                loaded_section
-            )
+
+        self.endpoints = parse_obj_as(List[PreDefinedEndpoint], raw_data.get('endpoints', list()))
         self.Config.use_presets = True
 
     def load(self, filename: str):
@@ -64,5 +58,51 @@ class PresetManifest(BaseSettings):
         except FileNotFoundError:
             logger.warning("Manifest not found, presets disabled")
 
+    def validate_presets(self) -> bool:
+        urls: list = list()
+        for endpoint in self.endpoints:
+            urls.append(endpoint.url)
+        seen = set()
+        dupes = [x for x in urls if x in seen or seen.add(x)]
+        if len(dupes):
+            logger.error(f"URL duplications found: {dupes}")
+            return False
+        return True
+
+    def generate_router(self) -> APIRouter:
+        router = APIRouter(
+            prefix="/presets",
+            tags=["Presets"],
+            responses={
+                404: {"description": "URL not found"},
+                400: {"description": "Bad request"},
+            },
+            version=APIVersion(1),
+        )
+        for endpoint in self.endpoints:
+            client: Client = Depends(temporal_client)
+            match endpoint.type:
+                case "activity": 
+                    prototype = internal_workflow_execution
+                case "workflow": 
+                    prototype = external_workflow_execution
+            
+            
+
+            router.add_api_route(
+                path=endpoint.url,
+                endpoint=partial(
+                    prototype,
+                    client=client,
+                    payload=endpoint.config
+                ),
+                dependencies=[client],
+                methods=['post'],
+                response_model=Any,
+                summary="Add it!",
+                description="Add it!",
+                
+            )
+        return router
 
 manifest: PresetManifest = PresetManifest()

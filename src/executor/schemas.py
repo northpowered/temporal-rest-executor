@@ -72,3 +72,6 @@ class ExecutionResult(BaseModel):
     execution_id: str = ""
     error: str | None = None
     data: Any | None = None
+
+    class Config:
+        smart_union = True

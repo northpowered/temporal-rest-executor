@@ -97,8 +97,10 @@ async def internal_workflow_execution(
         task_queue=TEMPORAL_INTERNAL_TASK_QUEUE,
         workflows=[InternalExecutionWorkflow],
     ):
+        print(type(payload))
+        print(payload)
         response: ExecutionResult = ExecutionResult(execution_init=payload)
-
+        print(response)
         if payload.parent_workflow_id is None:
             workflow_id: str = str(uuid4())
         else:

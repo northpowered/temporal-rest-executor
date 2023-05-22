@@ -54,11 +54,7 @@ async def lifespan(app: FastAPI):  # pragma: no cover
 
     Created with [red]:heart:[/ red] and by [blue bold]northpowered[/ blue bold]
     """)  # noqa: E501 W293
-    manifest.load(MANIFEST_FILENAME)
-    if manifest.Config.use_presets:
-        print(manifest.endpoints)
-    else:
-        print("no presets")
+    
     yield
 
 
@@ -75,3 +71,9 @@ app = FastAPI(
 
 app.include_router(workflow_router)
 app.include_router(activity_router)
+manifest.load(MANIFEST_FILENAME)
+if manifest.Config.use_presets:
+    print(manifest.endpoints)
+    app.include_router(manifest.generate_router())
+else:
+    print("no presets")
